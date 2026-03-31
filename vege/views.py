@@ -1,3 +1,5 @@
+from urllib import request
+
 from django.shortcuts import render, redirect
 from .models import *
 from django.http import HttpResponse
@@ -81,56 +83,80 @@ def delete_receipe(request, id):
     return redirect('/receipes')
 
 def login_page(request):
-    if request.method=='POST':
-        username=request.POST.get('username')
-        password=request.POST.get('password')
-         
-        if not User.objects.filter(username = username).exists():
-           messages.error(request, 'User does not exist')
-           return redirect('/login')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
 
-        user=authenticate(username=username, password=password)
+        user = User.objects.filter(email=email).first()
 
-        if user is None:
-            messages.error(request, 'invalid Password')
-            return redirect('/login') 
-        
-        else:
-            login(request,user)
+        if user and user.check_password(password):
+            login(request, user)
             return redirect('/receipes')
+        else:
+            messages.error(request, 'Invalid credentials')
+            return redirect('/login')
 
-    return render(request,'login.html')
+    return render(request, 'login.html')
 
 def logout_page(request):
     logout(request)
     return redirect('/login/')
 
 def register(request):
-    if request.method=="POST":
-        first_name=request.POST.get('first_name')
-        last_name=request.POST.get('last_name')
-        username=request.POST.get('username')
-        password=request.POST.get('password')
-        
-        user= User.objects.filter(username=username)
-         
-        if user.exists():
-            messages.info(request,'Username already taken')
-            return redirect('/register')
-      
-        user= User.objects.create(
-        first_name=first_name,
-        last_name=last_name,
-        username = username, 
-         
-         ) 
-        user.set_password(password)
-        user.save() 
-     
-        messages.info(request,'Account created Successfully') 
-        return redirect('/register/')
+    if request.method == "POST":
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone_number')
+        password = request.POST.get('password')
 
-    return render(request,'register.html')
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already exists')
+            return redirect('/register')
+
+          
+        if User.objects.filter(phone_number=phone).exists():
+            messages.error(request, 'Phone number already exists')
+            return redirect('/register/')
+        
+        user = User.objects.create(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone_number=phone
+        )
+
+        user.set_password(password)
+        user.save()
+
+        messages.success(request, 'Account created successfully')
+        return redirect('/login')
+
+    return render(request, 'register.html')  
+        
+# if request.method == "POST":
+#         first_name = request.POST.get('first_name')
+#         last_name = request.POST.get('last_name')
+#         phone = request.POST.get('phone_number')
+#         password = request.POST.get('password')
+
+#         if User.objects.filter(phone_number=phone).exists():
+#             messages.info(request, 'Phone number already exists')
+#          return redirect('/register')
+
+#         user = User.objects.create(
+#             first_name=first_name,
+#             last_name=last_name,
+#             phone_number=phone
+#         )
+
+#         user.set_password(password)
+#         user.save()
+
+#         messages.info(request, 'Account created Successfully')
+#         return redirect('/login')
+
+#     return render(request, 'register.html')
 
 from django.db.models import Q,Sum
 

@@ -1,0 +1,59 @@
+body {
+    background-color: pink;
+}
+
+/* 🌈 Global */
+body {
+    background-color: #f5f7fb;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* 🧊 Card UI */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* 🔘 Buttons */
+.btn-primary {
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    border: none;
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #43e97b, #38f9d7);
+    border: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+
+/* 🧾 Table */
+.table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #0d6efd;
+    color: white;
+}
+
+/* 🖼 Image */
+img {
+    border-radius: 10px;
+}
+
+/* 🔍 Search box */
+input[type="search"] {
+    border-radius: 20px;
+    padding: 8px 15px;
+}
